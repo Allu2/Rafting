@@ -1,0 +1,12 @@
+{
+  "server_name": "Zariman",
+  "local_rmi_server_ip": "localhost",
+  "local_rmi_server_port": 1099,
+  "last_term": 0,
+  "timeout_min": 150,
+  "timeout_max": 300,
+  "log_path": "path",
+  "servers": {
+    "uid": "location"
+  }
+}
