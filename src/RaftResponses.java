@@ -1,5 +1,4 @@
 import org.json.simple.JSONObject;
-import raft.RaftResult;
 import java.util.ArrayList;
 
 /**
@@ -13,6 +12,8 @@ public class RaftResponses {
 
     public static void init (int term){
         cTerm = term;
+        cAppendResponses = new JSONObject();
+        cVotes = new JSONObject();
         clearVotes(term);
         clearAppendResponses(term);
     }
@@ -60,7 +61,11 @@ public class RaftResponses {
 
     public static boolean setAppendResponse(String uid, RaftResult response, int leaderTerm) {
         if(cTerm == response.getTerm()){
-            cAppendResponses.put(uid, response.isSuccessful());
+            JSONObject helper = new JSONObject();
+            helper.put("success", response.isSuccessful());
+            helper.put("term", response.getTerm());
+            helper.put("logConsistent", response.isLogConsistent());
+            cAppendResponses.put(uid, helper);
             return true;
         }
         return false;

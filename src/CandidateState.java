@@ -1,5 +1,6 @@
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import raft.RaftResult;
+
 
 import java.util.Objects;
 import java.util.Random;
@@ -26,7 +27,7 @@ public class CandidateState extends BaseState {
     private void incrementTerm(){
         RaftConfig config_object = new RaftConfig();
         JSONObject config = config_object.RaftConfig();
-        int last_term = (Integer) config.get("last_term");
+        int last_term = (int)(long) config.get("last_term");
         config.put("last_term", last_term+1);
         config_object.writeJSON(config);
     }
@@ -35,9 +36,9 @@ public class CandidateState extends BaseState {
         System.out.println("We're starting elections!");
         RaftConfig config_object = new RaftConfig();
         JSONObject config = config_object.RaftConfig();
-        int last_term = (Integer) config.get("last_term");
+        int last_term = (int)(long) config.get("last_term");
         String our_name = config.get("server_name").toString();
-        int last_applied = (Integer) config.get("last_index");
+        int last_applied = (int)(long) config.get("last_index");
         RaftResponses.setTerm(last_term);
         RaftResponses.clearVotes(last_term);
 
@@ -48,6 +49,7 @@ public class CandidateState extends BaseState {
         config_object = new RaftConfig();
         JSONObject servers = (JSONObject) config_object.RaftConfig().get("servers");
         for(Object server_name: servers.keySet()){
+            System.out.println("Requesting vote from "+server_name.toString());
             this.remoteRequestVote(server_name.toString(), last_term, our_name, last_applied, last_term-1);
         }
 
@@ -57,7 +59,7 @@ public class CandidateState extends BaseState {
     public RaftResult requestVote(int candidateTerm, String candidateUID, int lastLogIndex, int lastLogTerm) {
         synchronized (thred_lock){
             JSONObject conf = new RaftConfig().RaftConfig();
-            int term = (Integer) conf.get("last_term");
+            int term = (int)(long) conf.get("last_term");
             String server_name = conf.get("server_name").toString();
             RaftResultImp reply = new RaftResultImp();
             if(Objects.equals(candidateUID, server_name)){
@@ -78,7 +80,7 @@ public class CandidateState extends BaseState {
         RaftResultImp reply = new RaftResultImp();
         synchronized (thred_lock){
             JSONObject conf = new RaftConfig().RaftConfig();
-            int term = (Integer) conf.get("last_term");
+            int term = (int)(long) conf.get("last_term");
             System.out.println("We received heartbeat from "+ leaderUID);
 
             if(leaderTerm>term){
@@ -103,15 +105,36 @@ public class CandidateState extends BaseState {
 
     @Override
     public void handleTimeout(int timerID) {
+        System.out.println("Timeout: "+timerID);
         synchronized (thred_lock){
             if(timerID==this.Election_timeout_timer_id){
+                System.out.println("Hellow");
                 this.myElectionTimeoutTimer.cancel();
                 JSONObject conf = new RaftConfig().RaftConfig();
-                int current_term = (Integer) conf.get("last_term");
+                int current_term = (int)(long) conf.get("last_term");
                 JSONObject votes = RaftResponses.getVotes(current_term);
+                JSONObject servers = (JSONObject) conf.get("servers");
+                Integer server_count = servers.size();
+                Integer vote_counter = 0;
+                System.out.println(votes.keySet());
+                for(Object server_name: votes.keySet()){
+                    boolean vote_value = (boolean) votes.get(server_name);
+                    if(vote_value){
+                        vote_counter++;
+                    }
+                    System.out.println("Counted "+ vote_counter+"/"+server_count+" votes");
+                }
+                    if(vote_counter>server_count/2){
+                        RaftServer.setState(new LeaderState());
+                    }
+                    else{
+                        this.incrementTerm();
+                        this.beginElection();
+                    }
+                }
             }
 
         }
 
     }
-}
+

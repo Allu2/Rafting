@@ -1,13 +1,16 @@
-import raft.Raft;
-import raft.RaftResult;
+
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * Created by allu on 9.8.2016.
  */
-public class RaftServer implements Raft {
+public class RaftServer extends UnicastRemoteObject
+        implements Raft {
     private static BaseState cState;
+
+    public RaftServer() throws RemoteException{}
     public static void setState(BaseState state){
         cState = state;
         cState.go();

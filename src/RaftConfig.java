@@ -49,9 +49,9 @@ class RaftConfig {
 
             Object obj = parser.parse(conffi);
             JSONObject json = (JSONObject) obj;
-            System.out.println(json.get("server_name"));
-            JSONObject servers = (JSONObject) json.get("servers");
-            System.out.println(servers.get("Zariman").toString());
+            //System.out.println(json.get("server_name"));
+            //JSONObject servers = (JSONObject) json.get("servers");
+            //System.out.println(servers.get("Zariman").toString());
             return json;
 
         } catch (ParseException | FileNotFoundException e) {

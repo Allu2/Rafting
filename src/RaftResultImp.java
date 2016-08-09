@@ -1,9 +1,9 @@
-import raft.RaftResult;
+import java.io.Serializable;
 
 /**
  * Created by allu on 9.8.2016.
  */
-public class RaftResultImp extends RaftResult {
+public class RaftResultImp extends RaftResult implements Serializable{
 
     protected boolean success;
 

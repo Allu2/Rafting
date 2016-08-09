@@ -1,7 +1,8 @@
 import org.json.simple.JSONObject;
-import raft.RaftResult;
+
 
 import java.net.MalformedURLException;
+import java.rmi.ConnectException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -30,8 +31,8 @@ public abstract class BaseState {
         config = conffi;
 
         // HeartBeat is between these.
-        timeout_min = (Integer)conffi.get("timeout_min");
-        timeout_max = (Integer)conffi.get("timeout_max");
+        timeout_min = (int)(long)conffi.get("timeout_min");
+        timeout_max = (int)(long)conffi.get("timeout_max");
 
         // Get our UNIQUE name from config.
         UID = conffi.get("server_name").toString();
@@ -40,10 +41,10 @@ public abstract class BaseState {
         thred_lock = new Object();
 
         // Set term from last known in config.
-        term = (Integer) conffi.get("last_term");
+        term = (int)(long) conffi.get("last_term");
 
         // Set last index in log from config (Cause our log isn't sorted :P )
-        last_index = (Integer) conffi.get("last_index");
+        last_index = (int)(long) conffi.get("last_index");
 
         System.out.println("Server initialized");
 
@@ -77,7 +78,7 @@ public abstract class BaseState {
             public void run(){
                 String url = getRmiUrl(UID);
                 try{
-                    RaftServer server = (RaftServer) Naming.lookup(url);
+                    Raft server = (Raft) Naming.lookup(url);
                     RaftResult response = server.requestVote(candidateTerm,
                                                             candidateUID,
                                                             lastLogIndex,
@@ -91,6 +92,8 @@ public abstract class BaseState {
                 } catch (MalformedURLException me){
                     System.out.println("Caught malformed url");
                     me.printStackTrace();
+
+                } catch (ConnectException ignored){
 
                 } catch (RemoteException re){
                     System.out.println("Caught RemoteException");
@@ -114,7 +117,7 @@ public abstract class BaseState {
             public void run(){
                 String url = getRmiUrl(UID);
                 try{
-                    RaftServer server = (RaftServer) Naming.lookup(url);
+                    Raft server = (Raft) Naming.lookup(url);
                     RaftResult response = server.appendEntries(leaderTerm,
                                                                leaderID,
                                                                prevLogIndex,

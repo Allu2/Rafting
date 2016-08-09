@@ -1,14 +1,1 @@
-{
-  "server_name": "Zariman",
-  "url": "rmi://localhost:1099/Zariman",
-  "last_term": 0,
-  "last_index": 0,
-  "last_vote": "-1",
-  "timeout_min": 150,
-  "timeout_max": 300,
-  "log_path": "./log.json",
-  "servers": {
-    "Zariman": "rmi://localhost:1099/Zariman",
-    "TestSrv": "rmi://localhost:1099/TestSrv"
-  }
-}
+{"timeout_min":150,"server_name":"Zariman","last_index":0,"last_vote":"-1","timeout_max":300,"servers":{"Zariman":"rmi:\/\/localhost:1099\/Zariman","TestSrv":"rmi:\/\/localhost:1099\/TestSrv"},"last_commit":0,"log_path":".\/log.json","last_term":18,"url":"rmi:\/\/localhost:1099\/Zariman"}

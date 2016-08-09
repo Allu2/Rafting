@@ -1,5 +1,5 @@
 import org.json.simple.JSONObject;
-import raft.RaftResult;
+
 
 import java.util.Random;
 import java.util.Timer;
@@ -32,9 +32,9 @@ public class FollowerState extends BaseState {
         synchronized (thred_lock){
             RaftConfig config_object = new RaftConfig();
             JSONObject conf = config_object.RaftConfig();
-            int term = (Integer) conf.get("last_term");
+            int term = (int)(long) conf.get("last_term");
             String last_vote = (String) conf.get("last_vote");
-            int last_index = (Integer) conf.get("last_index");
+            int last_index = (int)(long) conf.get("last_index");
             RaftResultImp result = new RaftResultImp();
             if(candidateTerm >= term && last_vote.equals("-1") && lastLogIndex>=last_index){ // Using magic value to get stuff done :P
                 System.out.println("Server "+ conf.get("server_name")+ " voting for " + candidateUID);
@@ -64,7 +64,7 @@ public class FollowerState extends BaseState {
             RaftResultImp result = new RaftResultImp();
             System.out.println("Server "+ conf.get("server_name") + " received heartbeat from server "+leaderUID);
             this.resetLeaderTimeoutTimer();
-            int term = (Integer) conf.get("last_term");
+            int term = (int)(long) conf.get("last_term");
             if(leaderTerm>=term){
                 conf.replace("last_term", leaderTerm);
                 conf.replace("last_vote", "-1");
@@ -73,7 +73,7 @@ public class FollowerState extends BaseState {
             RaftLog log_object = new RaftLog();
             JSONObject log = log_object.RaftLog(conf.get("log_path").toString());
             JSONObject content_of_index = (JSONObject) log.get(prevLogIndex);
-            int termAtIndex = (Integer) content_of_index.get("term");
+            int termAtIndex = (int)(long) content_of_index.get("term");
             int counter = 0;
             if(termAtIndex==prevLogTerm){
                 JSONObject store = new JSONObject();
@@ -81,7 +81,7 @@ public class FollowerState extends BaseState {
                 for(String entry: entries){ // naive expectations are being made in this loop
                     content.put("term", newLogTerms[counter]);
                     content.put("entry", entry);
-                    store.put(prevLogIndex+counter, content);
+                    store.put(prevLogIndex+counter+1, content); // prevLog is one before what we get, counter starts from 0
                     log_object.writeJSON(store);
                     counter++;
                 }
