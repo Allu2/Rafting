@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
  */
 public class RaftServer implements Raft {
     private static BaseState cState;
-    public static void setMode(BaseState state){
+    public static void setState(BaseState state){
         cState = state;
         cState.go();
     }

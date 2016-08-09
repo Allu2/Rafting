@@ -1,10 +1,9 @@
 {
   "server_name": "Zariman",
-  "local_rmi_server_ip": "localhost",
-  "local_rmi_server_port": 1099,
+  "url": "rmi://localhost:1099/Zariman",
   "last_term": 0,
   "last_index": 0,
-  "last_vote": 0,
+  "last_vote": "-1",
   "timeout_min": 150,
   "timeout_max": 300,
   "log_path": "./log.json",

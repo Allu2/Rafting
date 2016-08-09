@@ -17,10 +17,6 @@ public class RaftResultImp extends RaftResult {
 
     protected boolean log_is_consistent;
 
-    public boolean isLog_is_consistent() {
-        return log_is_consistent;
-    }
-
     public void setLog_is_consistent(boolean log_is_consistent) {
         this.log_is_consistent = log_is_consistent;
     }

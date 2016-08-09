@@ -4,6 +4,8 @@ import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Created by aleksi on 8.8.2016.
@@ -25,7 +27,18 @@ class RaftLog {
     public JSONParser parser = new JSONParser();
     public File log_file;
 
-
+    public void writeJSON(JSONObject json){
+        try
+        {
+            FileWriter file = new FileWriter("./log.json"); // Some more hardcoded values in a rush.
+            file.write(json.toJSONString());
+            file.flush();
+            file.close();
+        } catch (IOException e){
+            System.out.println("IO ERROR while writing log.");
+            e.printStackTrace();
+        }
+    }
 
     public JSONObject RaftLog(String path) {
         try {

@@ -2,7 +2,6 @@ import org.json.simple.JSONObject;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 /**
@@ -13,8 +12,7 @@ public class StartRafting {
     public void main (String[] args){
         JSONObject conffi = new RaftConfig().RaftConfig();
         String UID = conffi.get("server_name").toString();
-        JSONObject servers = (JSONObject) conffi.get("servers");
-        String url = servers.get(UID).toString();
+        String url = conffi.get("url").toString();
 
         JSONObject log = new RaftLog().RaftLog(conffi.get("log_path").toString());
         int lastTerm = (Integer) conffi.get("last_term");
@@ -24,7 +22,7 @@ public class StartRafting {
         try{
             BaseState.init_server(conffi, log);
             RaftServer server = new RaftServer();
-            RaftServer.setMode(new FollowerState());
+            RaftServer.setState(new FollowerState());
 
             Naming.rebind(url, server);
         } catch (MalformedURLException me){

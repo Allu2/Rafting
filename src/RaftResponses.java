@@ -14,18 +14,15 @@ public class RaftResponses {
     public static void init (int term){
         cTerm = term;
         clearVotes(term);
-        clearAppendedResponses(term);
+        clearAppendResponses(term);
     }
 
     public static void setTerm(int term){
         cTerm = term;
     }
 
-    private static void clearAppendedResponses(int term) {
 
-    }
-
-    private static boolean clearVotes(int term) {
+    public static boolean clearVotes(int term) {
         if (cTerm == term){
             cVotes.clear();
             return true;
@@ -33,7 +30,7 @@ public class RaftResponses {
         return false;
     }
 
-    private static JSONObject getVotes(int term){
+    public static JSONObject getVotes(int term){
         if(cTerm == term) {return cVotes;}
         return null;
     }
@@ -53,7 +50,7 @@ public class RaftResponses {
         return null;
     }
 
-    public static boolean cleatAppendResponses(int term){
+    public static boolean clearAppendResponses(int term){
         if(cTerm == term){
             cAppendResponses.clear();
             return true;
