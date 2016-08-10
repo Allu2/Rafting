@@ -5,6 +5,13 @@ import java.io.Serializable;
  */
 public class RaftResultImp extends RaftResult implements Serializable{
 
+    public  int term;
+    @Override
+    public int getTerm() {
+        return this.term;
+    }
+
+
     protected boolean success;
 
     public boolean isSuccess() {
@@ -36,3 +43,4 @@ public class RaftResultImp extends RaftResult implements Serializable{
         return this.log_is_consistent;
     }
 }
+

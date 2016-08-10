@@ -12,6 +12,7 @@ public class RaftServer extends UnicastRemoteObject
 
     public RaftServer() throws RemoteException{}
     public static void setState(BaseState state){
+        System.out.println("Changing State.");
         cState = state;
         cState.go();
     }

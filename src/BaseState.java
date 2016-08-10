@@ -76,6 +76,7 @@ public abstract class BaseState {
                                            final int lastLogTerm){
         new Thread(){
             public void run(){
+                //System.out.println("Requesting vote from "+ UID + " at remoteRequestVote in BaseState");
                 String url = getRmiUrl(UID);
                 try{
                     Raft server = (Raft) Naming.lookup(url);
@@ -85,6 +86,7 @@ public abstract class BaseState {
                                                             lastLogTerm);
 
                     synchronized (BaseState.thred_lock){
+                        System.out.println("Candidate Term in response:" +response.getTerm());
                         RaftResponses.setVote(UID,
                                               response,
                                               candidateTerm);

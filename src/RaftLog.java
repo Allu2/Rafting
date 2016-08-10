@@ -46,7 +46,7 @@ class RaftLog {
             String log = FileReader.getFileContents(log_file);
             Object obj = parser.parse(log);
             JSONObject json = (JSONObject) obj;
-            System.out.println(json.toJSONString());
+            //System.out.println(json.toJSONString());
             return json;
 
         } catch (ParseException | FileNotFoundException e) {

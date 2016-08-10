@@ -37,7 +37,9 @@ public class RaftResponses {
     }
 
     public static boolean setVote(String uid, RaftResult response, int candidateTerm) {
+        System.out.println("setVote in RaftResponse term of candidate is "+uid+" with term:"+response.getTerm()+ ", our term:"+cTerm );
         if(cTerm == response.getTerm()){
+            System.out.println("Setting vote from "+uid);
             cVotes.put(uid, response.isSuccessful());
             return true;
         }
